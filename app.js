@@ -95,7 +95,7 @@ app.use((error, req, res, next) => {
 		return res.status(500).redirect('/500');
 	}
 	next();
-});
+}); 
 
 mongoose
 	.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
