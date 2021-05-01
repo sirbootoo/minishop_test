@@ -23,7 +23,6 @@ const storage = new CloudinaryStorage({
 	params: {
 		folder: 'minishop',
 		format: async (req, file) => 'png', // supports promises as well
-		public_id: (req, file) => 'z6lrnzax',
 	},
 });
 
