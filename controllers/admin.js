@@ -34,7 +34,7 @@ exports.postAddProduct = (req, res, next) => {
 		title: inputs.title,
 		price: inputs.price,
 		description: inputs.description,
-		imageUrl: '/' + req.file.path,
+		imageUrl: req.file.path,
 		userId: req.user._id,
 		address,
 		lat,
