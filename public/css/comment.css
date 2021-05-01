@@ -1,0 +1,36 @@
+a {
+    color: #333;
+    text-decoration: none;
+    }
+
+    h1, h2, h3 {
+    font-weight: 400;
+    }
+
+    h1 {
+    font-size: 30px;
+    }
+
+    h2 {
+    font-size: 24px;
+    }
+
+    h3 {
+    font-size: 20px;
+    }
+
+    img {
+      height: auto;
+      width: 100%;
+    }
+
+    section {
+    padding: 30px 60px;
+    }
+
+    .friend img {
+    height: 70px;
+    width: 100px;
+    display: block;
+    float: left;
+    }

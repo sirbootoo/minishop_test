@@ -1,0 +1,32 @@
+<%- include('../partials/header.ejs') %>
+<link rel="stylesheet" href="/css/comment.css">
+</head>
+
+<body>
+    <%- include('../partials/navigation.ejs') %>
+
+    <main>
+        
+        <a href="/products/<%= productId %>" class='btn'>Back to product</a>
+        <a href="/add-comment/<%= productId %>" class='btn'>Comment on product</a>
+        <% if (comments.length > 0) { %>
+        <div class="grid">
+            <section>
+                <% for (let comment of comments) { %>
+                <div class='friend'>
+                            <img src='http://media.dunkedcdn.com/assets/prod/13/700x0-5_p17o72pss9bbmvuspb1gl61ot23.jpg'>
+            
+                    <h3><%= comment.userEmail %></h3>
+                    <p><%= comment.body %></p>
+                </div>
+                <% } %>
+            </section>
+        </div>
+        <%- include('../partials/pagination.ejs', {
+            currentPage, previousPage, hasPreviousPage, currentPage, hasNextPage, nextPage, lastPage
+        }) %>
+        <% } else { %>
+        <h1>No Comments Found!</h1>
+        <% } %>
+    </main>
+    <%- include('../partials/footer.ejs') %>

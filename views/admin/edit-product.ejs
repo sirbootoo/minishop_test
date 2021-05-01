@@ -1,0 +1,73 @@
+<%- include('../partials/header.ejs') %>
+<link rel="stylesheet" href="/css/forms.css">
+<link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+<%- include('../partials/navigation.ejs') %>
+
+<main>
+    <% if (validationErrors.length> 0) { %>
+        <div class="user-message user-message--error">
+            <ul style="list-style-type: none;padding: 0;margin: 0">
+                <% validationErrors.map(error=> { %>
+                    <li>
+                        <%= error.msg %>
+                    </li>
+                    <% }); %>
+            </ul>
+        </div>
+        <% } %>
+            <form class="product-form" action="/admin/<%= editing ? 'edit-product' : 'add-product' %>"
+                method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                <div class="form-control">
+                    <label for="title">Title</label>
+                    <input class="<%= validationErrors.find(i => i.param === 'title') ? 'invalid' : '' %>"
+                        type="text" name="title" id="title"
+                        value="<%= editing || hasError ? product.title : '' %>">
+                </div>
+                <div class="form-control">
+                    <label for="image">Image</label>
+                    <input type="file" name="image" id="image" accept="image/*" </div>
+                    <div class="form-control">
+                        <label for="price">Price</label>
+                        <input
+                            class="<%= validationErrors.find(i => i.param === 'price') ? 'invalid' : '' %>"
+                            type="number" name="price" id="price" step="0.01"
+                            value="<%= editing || hasError ? product.price : '' %>">
+                    </div>
+                    <div class="form-control">
+                        <label for="description">Description</label>
+                        <textarea
+                            class="<%= validationErrors.find(i => i.param === 'description') ? 'invalid' : '' %>"
+                            name="description" id="description"
+                            rows="5"><%= editing || hasError ? product.description : '' %></textarea>
+                    </div>
+
+                    <div class="form-control">
+                        <label for="address">Address</label>
+                        <input
+                            class="<%= validationErrors.find(e => e.param === 'address') ? 'invalid' : '' %>"
+                            type="text" name="address" id="address"
+                            value="<%= editing || hasError ? product.address : '' %>">
+                        <input type="hidden" name="lat" id="lat"
+                            value="<%= editing || hasError ? product.lat : '' %>">
+                        <input type="hidden" name="long" id="long"
+                            value="<%= editing || hasError ? product.long : '' %>">
+                    </div>
+
+                    <% if (editing) { %>
+                        <input type="hidden" name="productId" value="<%= product._id %>">
+                        <% } %>
+
+                            <button class="btn" type="submit">
+                                <%= editing ? 'Edit' : 'Add' %> Product
+                            </button>
+            </form>
+</main>
+<%- include('../partials/footer.ejs') %>
+<script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1PE3miaPoMAL9xwzMIN3GemDQhPXB7_k&libraries=places"></script>
+    <script src="/js/autocomplete.js"></script>

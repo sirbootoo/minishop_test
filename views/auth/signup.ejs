@@ -1,0 +1,59 @@
+<%- include('../partials/header.ejs') %>
+    <link rel="stylesheet" href="/css/forms.css">
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body>
+   <%- include('../partials/navigation.ejs') %>
+
+    <main>
+        <% if (errorMessage.length > 0) { %>
+            <div class="user-message user-message--error"><%= errorMessage %></div>
+        <% } %>
+        <form class="login-form" action="/signup" method="POST" novalidate>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div class="form-control">
+                <label for="email">E-Mail</label>
+                <input 
+                    class="<%= validationErrors.find(e => e.param === 'email') ? 'invalid' : '' %>"
+                    type="email" 
+                    name="email" 
+                    id="email" 
+                    value="<%= oldInput.email %>">
+            </div>
+            <div class="form-control">
+                <label for="password">Password</label>
+                <input 
+                    class="<%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>"
+                    type="password" 
+                    name="password" 
+                    id="password">
+            </div>
+            <div class="form-control">
+                <label for="confirmPassword">Confirm Password</label>
+                <input 
+                    class="<%= validationErrors.find(e => e.param === 'confirmPassword') ? 'invalid' : '' %>"
+                    type="password" 
+                    name="confirmPassword" 
+                    id="confirmPassword">
+            </div>
+
+            <div class="form-control">
+                <label for="address">Address</label>
+                <input
+                    class="<%= validationErrors.find(e => e.param === 'address') ? 'invalid' : '' %>"
+                    type="text" name="address" id="address"
+                    value="">
+                <input type="hidden" name="lat" id="lat"
+                    value="">
+                <input type="hidden" name="long" id="long"
+                    value="">
+            </div>
+        
+            <button class="btn" type="submit">Register</button>
+        </form>
+    </main>
+<%- include('../partials/footer.ejs') %>
+<script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1PE3miaPoMAL9xwzMIN3GemDQhPXB7_k&libraries=places"></script>
+<script src="/js/autocomplete.js"></script>

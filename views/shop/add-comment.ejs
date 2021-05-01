@@ -1,0 +1,56 @@
+<%- include('../partials/header.ejs') %>
+<link rel="stylesheet" href="/css/forms.css">
+</head>
+
+<body>
+<%- include('../partials/navigation.ejs') %>
+
+<main>
+    <a href="/comments/?productId<%= productId %>" class='btn'>Back to product</a>
+    <% if (validationErrors.length> 0) { %>
+        <div class="user-message user-message--error">
+            <ul style="list-style-type: none;padding: 0;margin: 0">
+                <% validationErrors.map(error=> { %>
+                    <li>
+                        <%= error.msg %>
+                    </li>
+                    <% }); %>
+            </ul>
+        </div>
+        <% } %>
+            <form class="comment-form" action="<%='/add-comment/'%>"
+                method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                <div class="form-control">
+                    <label for="title">Comment</label>
+                    <textarea
+                            class="<%= validationErrors.find(i => i.param === 'body') ? 'invalid' : '' %>"
+                            name="body" id="body"
+                            rows="5"></textarea>
+                    <input type="hidden" name="productId" value="<%= productId %>">            
+                </div>
+                
+                            <button class="btn" type="submit">
+                                Submit Comment
+                            </button>
+            </form>
+</main>
+<%- include('../partials/footer.ejs') %>
+
+<script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCgXbk_9SJeVAg4bT-DNEcr9g58m76KAk&libraries=places"></script>
+
+<script>
+    google.maps.event.addDomListener(window, 'load', initialize);
+    function initialize() {
+        var input = document.getElementById('address');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener('place_changed', function () {
+            var place = autocomplete.getPlace();
+            // place variable will have all the information you are looking for.
+            $('#lat').val(place.geometry['location'].lat());
+            $('#long').val(place.geometry['location'].lng());
+        });
+    }
+</script>
