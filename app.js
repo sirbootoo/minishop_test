@@ -7,6 +7,8 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 require('dotenv').config();
 
@@ -16,16 +18,25 @@ const store = new MongoDBStore({
 	collection: 'sessions'
 });
 
+const storage = new CloudinaryStorage({
+	cloudinary: cloudinary,
+	params: {
+		folder: 'minishop',
+		format: async (req, file) => 'png', // supports promises as well
+		public_id: (req, file) => 'computed-filename-using-request',
+	},
+});
+
 const fileStorage = multer.diskStorage({
-	destination: function(req, file, cb) {
+	destination: function (req, file, cb) {
 		cb(null, 'uploads');
 	},
-	filename: function(req, file, cb) {
+	filename: function (req, file, cb) {
 		cb(null, new Date().toISOString() + '-' + file.originalname);
 	}
 });
 
-const fileFilter = function(req, file, cb) {
+const fileFilter = function (req, file, cb) {
 	if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg') {
 		cb(null, true);
 	} else {
@@ -44,7 +55,7 @@ const errorController = require('./controllers/error');
 const User = require('./models/user');
 
 app.use(express.urlencoded({ extended: false }));
-app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
+app.use(multer({ storage: storage, fileFilter: fileFilter }).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(
@@ -88,14 +99,14 @@ app.use(authRoutes);
 app.get('/500', errorController.get500);
 
 app.use(errorController.get404);
- 
+
 app.use((error, req, res, next) => {
 	if (error) {
 		console.log(error);
 		return res.status(500).redirect('/500');
 	}
 	next();
-}); 
+});
 
 mongoose
 	.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
